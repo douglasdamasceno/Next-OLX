@@ -1,5 +1,5 @@
 import {createTheme} from "@mui/material";
-import { purple,cyan} from "@mui/material/colors";
+import { purple,cyan, orange} from "@mui/material/colors";
 
 export const DarkTheme = createTheme({
     palette:{
@@ -11,19 +11,19 @@ export const DarkTheme = createTheme({
             contrastText:'#ffffff',
         },
         secondary:{
-            main:cyan[500],
-            dark:cyan[400],
-            light:cyan[300],
-            contrastText:'#ffffff',
+            main:orange[500],
+            dark:orange[400],
+            light:orange[300],
+            contrastText:'#fff00',
         },
         background:{
             default:'#303134',
-            paper:'#3a3a3a',
+            paper:'#000000',
         }
     },
     typography:{
         allVariants:{
-            color:'#ffffff',
+            color:'#fff',
         }
     }
 });
