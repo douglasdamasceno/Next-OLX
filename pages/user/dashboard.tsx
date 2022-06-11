@@ -4,7 +4,6 @@ import type { NextPage } from 'next'
 import TemplateDefault from "../../src/templates/Default";
 
 const useStyles = makeStyles((theme: Theme ) => ({
-  root: {},
   container: {
     padding: theme.spacing(8, 0, 6, 0)
   },
@@ -25,7 +24,7 @@ const Home: NextPage = () => {
       <Box display='flex' flexDirection='column'>
 
       <Container maxWidth="sm" className={classes.container}>
-        <Typography component="h1" color='secondary'  variant='h2'align='center'>Meus Anúncios</Typography>
+        <Typography component="h1" color='primary'  variant='h2'align='center'>Meus Anúncios</Typography>
         <Button className={classes.buttonAdd} variant="contained" color='primary' style={{margin:'30px auto',display:'block'}}>
           Publicar novo anúncio
         </Button>
@@ -48,8 +47,8 @@ const Home: NextPage = () => {
                 </Typography>
               </CardContent>
               <CardActions>
-                <Button size="small" color="primary">Editar</Button>
-                <Button size="small" color="primary">Remover</Button>
+                <Button size="small" color="primary" variant='contained'>Editar</Button>
+                <Button size="small" color="primary" variant='contained'>Remover</Button>
               </CardActions>
             </Card>
           </Grid>
@@ -70,8 +69,8 @@ const Home: NextPage = () => {
                 </Typography>
               </CardContent>
               <CardActions>
-                <Button size="small" color="primary">Editar</Button>
-                <Button size="small" color="primary">Remover</Button>
+                <Button size="small" color="primary" variant='outlined'>Editar</Button>
+                <Button size="small" color="primary" variant='outlined'>Remover</Button>
               </CardActions>
             </Card>
           </Grid>
