@@ -1,9 +1,10 @@
 import { Container, Typography,Theme,Box ,TextField,Select, useTheme, Button, useMediaQuery, IconButton} from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 
 import TemplateDefault from "../../src/templates/Default";
 import {makeStyles} from "@mui/styles";
 import { DeleteForever } from '@mui/icons-material';
+import { useDropzone } from 'react-dropzone';
 
 const useStyles = makeStyles((theme:Theme) => ({
     container: {
@@ -23,11 +24,12 @@ const useStyles = makeStyles((theme:Theme) => ({
         width:200,
         height:150,
         backgroundSize:'cover',
+        margin:'0 10px 10px 0',
         backgroundPosition:'center center',
 
         '& $mainImage':{
             backgroundColor:'blue',
-            paddding:'6px 10px',
+            paddding:'10px 10px',
             position:'absolute',
             botttom:0,
             left:0,
@@ -48,7 +50,24 @@ const useStyles = makeStyles((theme:Theme) => ({
     },
 }));
 
+type TFile = typeof File & {
+    preview: string;
+}
+
 const Publish: React.FC = () => {
+    const [files,setFiles] = useState<TFile[]>([]);
+    const {getRootProps, getInputProps} = useDropzone({
+        accept: {'image/*':[]},
+        onDrop: (acceptedFile)=>{
+           const newFiles = acceptedFile.map((file:File)=>{
+               return Object.assign(file,{
+                   preview:URL.createObjectURL(file)
+               });
+           });
+           setFiles([...files,...newFiles]);
+        }
+    });
+
     const classes = useStyles();
     const theme = useTheme();
     const isSmDown = useMediaQuery((theme:Theme)=>theme.breakpoints.down('sm'));
@@ -116,7 +135,7 @@ const Publish: React.FC = () => {
                     <Typography component="div" color='textPrimary'  variant='body2'>
                         A primeira imagem é a foto principal do anúncio.
                     </Typography>
-                    <Box display="flex">
+                    <Box display="flex" flexWrap="wrap">
                         <Box 
                             component="div"
                             display="flex"
@@ -129,28 +148,40 @@ const Publish: React.FC = () => {
                             margin="0 15px 15px 0"
                             style={{ backgroundColor:theme.palette.background.paper}}
                             border="2px dashed black"
+                            {...getRootProps()}
                         >
+                            <input {...getInputProps()} />
                             <Typography variant='body2' component="div" color='textPrimary'>
                                 Clique para adicionar ou arraste a imagem.
                             </Typography>
                         </Box>
-                        <Box
-                            className={classes.thumb}
-                            component="div"
-                            style={{backgroundImage:'url(https://source.unsplash.com/random/200x200)'}}
-                        >
-                            <Box className={classes.mainImage}>
-                                <Typography variant='body2' component="div" color='secondary'>
-                                    Principal
-                                </Typography>
+                        {
+                            files.map((file:TFile,index)=>(
+                                <Box
+                                    key={file.name}
+                                    className={classes.thumb}
+                                    component="div"
+                                    style={{backgroundImage:`url(${file.preview})`}}
+                                    >
+                                    {
+                                        index === 0 && 
+                                        (
+                                            <Box className={classes.mainImage}>
+                                                <Typography variant='body2' component="div" color='secondary'>
+                                                    Principal
+                                                </Typography>
+                                            </Box>
+                                        )
+                                    }
+                                    <Box className={classes.mask}>
+                                        <IconButton color="secondary" onClick={()=> {}}>
+                                            <DeleteForever fontSize="large" />
+                                        </IconButton>
+                                    </Box>
                             </Box>
-                            <Box className={classes.mask}>
-                                <IconButton color="secondary" onClick={()=> {}}>
-                                    <DeleteForever fontSize="large" />
-                                </IconButton>
-                            </Box>
-
-                        </Box>
+                            ))
+                        }
+                        
                     </Box>
                 </Box>
                 <Box 
