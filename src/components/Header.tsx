@@ -6,7 +6,7 @@ export default function Header() {
   return (
     <Box >
       <AppBar position="static" >
-        <Toolbar >
+        <Toolbar>
           <IconButton
             size="large"
             edge="start"
