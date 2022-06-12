@@ -1,8 +1,9 @@
-import { Container, Typography,Theme,Box ,TextField,Select, useTheme, Button} from '@mui/material';
+import { Container, Typography,Theme,Box ,TextField,Select, useTheme, Button, useMediaQuery, IconButton} from '@mui/material';
 import React from 'react';
 
 import TemplateDefault from "../../src/templates/Default";
 import {makeStyles} from "@mui/styles";
+import { DeleteForever } from '@mui/icons-material';
 
 const useStyles = makeStyles((theme:Theme) => ({
     container: {
@@ -14,12 +15,44 @@ const useStyles = makeStyles((theme:Theme) => ({
         gap:theme.spacing(2),
         backgroundColor:theme.palette.background.default,
         padding:theme.spacing(3),
-    }
+    },
+    mask:{ },
+    mainImage:{ },
+    thumb:{
+        position:'relative',
+        width:200,
+        height:150,
+        backgroundSize:'cover',
+        backgroundPosition:'center center',
+
+        '& $mainImage':{
+            backgroundColor:'blue',
+            paddding:'6px 10px',
+            position:'absolute',
+            botttom:0,
+            left:0,
+        },
+
+        '&:hover $mask':{
+            display:'flex',
+        },
+        '& $mask':{
+            backgroundColor:'rgba(0,0,0,0.7)',
+            height:'100%',
+            width:'100%',
+            display:'none',
+            justifyContent:'center',
+            alignItems:'center',
+            textAlign:'center',
+        }
+    },
 }));
 
 const Publish: React.FC = () => {
     const classes = useStyles();
     const theme = useTheme();
+    const isSmDown = useMediaQuery((theme:Theme)=>theme.breakpoints.down('sm'));
+    
   return (
       <TemplateDefault>
             <Box maxWidth="sm" component={Container} className={classes.container}>
@@ -83,6 +116,42 @@ const Publish: React.FC = () => {
                     <Typography component="div" color='textPrimary'  variant='body2'>
                         A primeira imagem é a foto principal do anúncio.
                     </Typography>
+                    <Box display="flex">
+                        <Box 
+                            component="div"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            textAlign="center"
+                            padding={1.25}
+                            width="200px"
+                            height="150px"
+                            margin="0 15px 15px 0"
+                            style={{ backgroundColor:theme.palette.background.paper}}
+                            border="2px dashed black"
+                        >
+                            <Typography variant='body2' component="div" color='textPrimary'>
+                                Clique para adicionar ou arraste a imagem.
+                            </Typography>
+                        </Box>
+                        <Box
+                            className={classes.thumb}
+                            component="div"
+                            style={{backgroundImage:'url(https://source.unsplash.com/random/200x200)'}}
+                        >
+                            <Box className={classes.mainImage}>
+                                <Typography variant='body2' component="div" color='secondary'>
+                                    Principal
+                                </Typography>
+                            </Box>
+                            <Box className={classes.mask}>
+                                <IconButton color="secondary" onClick={()=> {}}>
+                                    <DeleteForever fontSize="large" />
+                                </IconButton>
+                            </Box>
+
+                        </Box>
+                    </Box>
                 </Box>
                 <Box 
                     display="flex" 
@@ -139,7 +208,7 @@ const Publish: React.FC = () => {
                     />
                 </Box>
                 <Box textAlign="end">
-                    <Button variant="contained" color="primary">
+                    <Button variant="contained" color="primary" fullWidth={isSmDown}>
                         Publicar Anúncio
                     </Button>
                 </Box>

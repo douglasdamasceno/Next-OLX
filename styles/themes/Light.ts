@@ -1,5 +1,5 @@
 import {createTheme} from "@mui/material";
-import { purple} from "@mui/material/colors";
+import { orange, purple} from "@mui/material/colors";
 
 export const LightTheme = createTheme({
     palette:{
@@ -8,6 +8,11 @@ export const LightTheme = createTheme({
             main:purple[700],
             dark:purple[800],
             light:purple[500],
+        },
+        secondary:{
+            main:orange[700],
+            dark:orange[800],
+            light:orange[500],
         },
         background:{
             default:'rgba(242,244,245)',
