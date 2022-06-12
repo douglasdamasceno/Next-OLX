@@ -1,4 +1,7 @@
-import { Container, Typography,Theme,Box ,TextField,Select, useTheme, Button, useMediaQuery, IconButton} from '@mui/material';
+import { Container, Typography,Theme,Box ,TextField,Select, 
+        useTheme, Button, useMediaQuery, IconButton,FormControl, InputLabel,OutlinedInput,
+        InputAdornment,
+    } from '@mui/material';
 import React, { useState } from 'react';
 
 import TemplateDefault from "../../src/templates/Default";
@@ -68,6 +71,10 @@ const Publish: React.FC = () => {
         }
     });
 
+    const handleRemoveFile = (fileName:string):void =>{
+        const newFileState = files.filter(file=>file.name!==fileName);
+        setFiles(newFileState);
+    }
     const classes = useStyles();
     const theme = useTheme();
     const isSmDown = useMediaQuery((theme:Theme)=>theme.breakpoints.down('sm'));
@@ -145,7 +152,7 @@ const Publish: React.FC = () => {
                             padding={1.25}
                             width="200px"
                             height="150px"
-                            margin="0 15px 15px 0"
+                            margin="0 10px 10px 0"
                             style={{ backgroundColor:theme.palette.background.paper}}
                             border="2px dashed black"
                             {...getRootProps()}
@@ -174,7 +181,7 @@ const Publish: React.FC = () => {
                                         )
                                     }
                                     <Box className={classes.mask}>
-                                        <IconButton color="secondary" onClick={()=> {}}>
+                                        <IconButton color="secondary" onClick={()=> handleRemoveFile(file.name)}>
                                             <DeleteForever fontSize="large" />
                                         </IconButton>
                                     </Box>
@@ -204,6 +211,23 @@ const Publish: React.FC = () => {
                         variant="outlined"
                         fullWidth
                     />
+                </Box>
+                <Box display="flex" 
+                    flexDirection="column"
+                    gap={2} 
+                    bgcolor={theme.palette.background.default}
+                    padding={3}
+                    marginBottom={3}>
+                    <Typography component="h6" color='textPrimary'  variant='h6'>
+                        Preço
+                    </Typography>
+                    <br/>
+                    <FormControl  fullWidth variant='outlined'>
+                        <InputLabel>Valor</InputLabel>
+                        <OutlinedInput onChange={()=>{}} 
+                            startAdornment={<InputAdornment position='start'>R$</InputAdornment>} 
+                        />
+                    </FormControl>
                 </Box>
                 <Box 
                     display="flex" 
@@ -238,6 +262,7 @@ const Publish: React.FC = () => {
                         fullWidth
                     />
                 </Box>
+                
                 <Box textAlign="end">
                     <Button variant="contained" color="primary" fullWidth={isSmDown}>
                         Publicar Anúncio
