@@ -1,7 +1,8 @@
 import { Avatar, Box, Card, CardHeader, CardMedia, Chip, Container, Grid, Theme, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { NextPage } from 'next';
-import React from 'react';
+import Carousel from "react-material-ui-carousel";
+
 import TemplateDefault from  '../src/templates/Default';
 
 const useStyles = makeStyles((theme:Theme) => ({
@@ -17,6 +18,12 @@ const useStyles = makeStyles((theme:Theme) => ({
         fontWeight:'bold',
         marginBottom:15,
     },
+    card:{
+        height:'100%',
+    },
+    cardMedia:{
+        paddingTop: '56.25%',
+    }
 }));
 const Product:  NextPage = () => {
     const classes = useStyles();
@@ -26,7 +33,31 @@ const Product:  NextPage = () => {
                 <Grid container spacing={3}>
                     <Grid item xs={8}>
                         <Box className={classes.box}>
-                            Carrossel
+                            <Carousel
+                                autoPlay={false}
+                                animation="slide" 
+                                navButtonsAlwaysVisible
+                                navButtonsProps={{
+                                    style: {
+                                        color:'white',
+                                    }
+                                }} 
+                            >
+                                <Card className={classes.card}>
+                                    <CardMedia 
+                                        className={classes.cardMedia}
+                                        image="https://source.unsplash.com/random?a=1"
+                                        title="Titulo da imagem"
+                                        />
+                                </Card>
+                                <Card className={classes.card}>
+                                    <CardMedia 
+                                        className={classes.cardMedia}
+                                        image="https://source.unsplash.com/random?a=2"
+                                        title="Titulo da imagem"
+                                        />
+                                </Card>
+                            </Carousel>
                         </Box>
                         <Box className={classes.box} textAlign="left">
                             <Typography component="span" variant="caption">
