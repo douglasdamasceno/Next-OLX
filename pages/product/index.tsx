@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles';
 import { NextPage } from 'next';
 import Carousel from "react-material-ui-carousel";
 
-import TemplateDefault from  '../src/templates/Default';
+import TemplateDefault from  '../../src/templates/Default';
 
 const useStyles = makeStyles((theme:Theme) => ({
     box:{

@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme:Theme) =>({
     },
     cardGrid:{
         marginTop: theme.spacing(6),
+    },
+    searchInput:{
+        flexGrow: 1,
     }
 }));
 
@@ -34,7 +37,7 @@ const Home: NextPage = () => {
                     O que deseja encontrar?
                 </Typography>
                 <Box component={Paper}  className={classes.searchBox}>
-                    <InputBase placeholder='Ex.: celular novo com garantia' />
+                    <InputBase className={classes.searchInput} placeholder='Ex.: celular novo com garantia' />
                     <IconButton>
                         <SearchIcon>search</SearchIcon>
                     </IconButton>
