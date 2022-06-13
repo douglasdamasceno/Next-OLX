@@ -37,14 +37,14 @@ export default function Header() {
               ) 
             }
 
-            <IconButton  color="secondary" onClick={(event)=> setAnchorUserMenu(event.currentTarget)}>
+            <Button  color="secondary" onClick={(event)=> setAnchorUserMenu(event.currentTarget)}>
               <Typography marginLeft={2} marginRight={1} variant="subtitle2" color="secondary" >
                   Douglas Damasceno
               </Typography>
               <Avatar alt="Remy Sharp" src="https://source.unsplash.com/random" >
                 <AccountCircle />
               </Avatar>
-            </IconButton>
+            </Button>
 
             <Menu
               open={opnenUserMenu}

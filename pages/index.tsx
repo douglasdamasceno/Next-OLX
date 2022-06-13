@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, CardMedia, Grid, IconButton, InputBase, Paper, Theme, Typography } from '@mui/material';
+import { Box, Grid, IconButton, InputBase, Paper, Theme, Typography } from '@mui/material';
 import { Container } from '@mui/system';
 import React from 'react';
 
@@ -6,6 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from '@mui/styles';
 
 import TemplaDefault from '../src/templates/Default';
+import Card from '../src/components/Card';
 
 const useStyles = makeStyles((theme:Theme) =>({
    
@@ -17,12 +18,8 @@ const useStyles = makeStyles((theme:Theme) =>({
         marginTop:20,
         backgroundColor: theme.palette.background.paper,
     },
-
     cardGrid:{
-
-    },
-    cardMedia:{
-        paddingTop: '56.25%',
+        marginTop: theme.spacing(6),
     }
 }));
 
@@ -48,72 +45,25 @@ const  Home: React.FC = () => {
                 </Typography>
                 <Grid container spacing={4} marginTop={1}>
                     <Grid item xs={12} sm={6} md={4}>
-                        <Card>
-                            <CardMedia 
-                                className={classes.cardMedia}
-                                image={"https://source.unsplash.com/random"}
-                                title="Titulo do anúncio"
-                            />
-                            <CardContent>
-                                <Typography variant="h5" component="h2">
-                                Produto x
-                                </Typography>
-                                <Typography variant="h5" component="h2">
-                                R$ 100,99
-                                </Typography>
-                            </CardContent>
-                        </Card>
+                        <Card 
+                            title='Produto XL' 
+                            subtitle='R$ 100,00'
+                            image={"https://source.unsplash.com/random"}
+                        /> 
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                        <Card>
-                            <CardMedia 
-                                className={classes.cardMedia}
-                                image={"https://source.unsplash.com/random"}
-                                title="Titulo do anúncio"
-                            />
-                            <CardContent>
-                                <Typography variant="h5" component="h2">
-                                Produto x
-                                </Typography>
-                                <Typography variant="h5" component="h2">
-                                R$ 100,99
-                                </Typography>
-                            </CardContent>
-                        </Card>
+                        <Card 
+                            title='Produto XL' 
+                            subtitle='R$ 100,00'
+                            image={"https://source.unsplash.com/random"}
+                        /> 
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                        <Card>
-                            <CardMedia 
-                                className={classes.cardMedia}
-                                image={"https://source.unsplash.com/random"}
-                                title="Titulo do anúncio"
-                            />
-                            <CardContent>
-                                <Typography variant="h5" component="h2">
-                                Produto x
-                                </Typography>
-                                <Typography variant="h5" component="h2">
-                                R$ 100,99
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card>
-                            <CardMedia 
-                                className={classes.cardMedia}
-                                image={"https://source.unsplash.com/random"}
-                                title="Titulo do anúncio"
-                            />
-                            <CardContent>
-                                <Typography variant="h5" component="h2">
-                                Produto x
-                                </Typography>
-                                <Typography variant="h5" component="h2">
-                                R$ 100,99
-                                </Typography>
-                            </CardContent>
-                        </Card>
+                        <Card 
+                            title='Produto XL' 
+                            subtitle='R$ 100,00'
+                            image={"https://source.unsplash.com/random"}
+                        /> 
                     </Grid>
                 </Grid>
             </Container>
