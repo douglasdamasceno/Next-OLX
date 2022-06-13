@@ -72,6 +72,7 @@ const validationSchema = yup.object().shape({
     .min(6,"Escreva um título maior")
     .max(100,"Escreva um título menor")
     .required('Descrição é obrigatório'),
+    price: yup.number().required('Preço é obrigatória'),
 });
 
 const Publish: React.FC = () => {
@@ -112,6 +113,7 @@ const Publish: React.FC = () => {
                     title:'',
                     category:'',
                     description:'',
+                    price:'',
                 }}
                 validationSchema={validationSchema}  
                 onSubmit={(values)=>{
@@ -125,7 +127,7 @@ const Publish: React.FC = () => {
                         handleSubmit,
                         handleChange,
                     })=>{
-                        console.log(errors);
+                        
                         return(
                             <form onSubmit={handleSubmit}>
                                 <Container maxWidth="md">
@@ -266,11 +268,12 @@ const Publish: React.FC = () => {
                                             Preço
                                         </Typography>
                                         <br/>
-                                        <FormControl  fullWidth variant='outlined'>
+                                        <FormControl error={!!errors.price}  fullWidth variant='outlined'>
                                             <InputLabel>Valor</InputLabel>
                                             <OutlinedInput onChange={()=>{}} 
                                                 startAdornment={<InputAdornment position='start'>R$</InputAdornment>} 
                                             />
+                                            <FormHelperText>{errors.price}</FormHelperText>
                                         </FormControl>
                                     </Box>
                                     <Box 
