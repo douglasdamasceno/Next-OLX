@@ -1,6 +1,8 @@
 import { Container, Typography,Theme,Box ,TextField,Select, 
         useTheme, Button, useMediaQuery, IconButton,FormControl, InputLabel,OutlinedInput,
         InputAdornment,
+        MenuItem,
+        FormHelperText,
     } from '@mui/material';
 import React, { useState } from 'react';
 
@@ -11,6 +13,7 @@ import { DeleteForever } from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import { FormControlUnstyled } from '@mui/base';
 
 const useStyles = makeStyles((theme:Theme) => ({
     box:{
@@ -62,6 +65,7 @@ const validationSchema = yup.object().shape({
         .min(6,"Escreva um título maior")
         .max(100,"Escreva um título menor")
         .required('Título é obrigatório'),
+    category: yup.string().required('Categoria é obrigatória'),
 });
 
 const Publish: React.FC = () => {
@@ -100,6 +104,7 @@ const Publish: React.FC = () => {
             <Formik
                 initialValues={{
                     title:'',
+                    category:'',
                 }}
                 validationSchema={validationSchema}  
                 onSubmit={(values)=>{
@@ -142,23 +147,21 @@ const Publish: React.FC = () => {
                                         <Typography component="h6" color='textPrimary'  variant='h6' >
                                             Categoria
                                         </Typography>
-                                        <Select
-                                            variant='standard'
-                                            native
-                                            fullWidth
-                                            value=""
-                                            label="Age"
-                                            onChange={()=>{}}
-                                            inputProps={{
-                                                name: 'category',
-                                            }}
-                                        >
-                                            <option value="">Selecione</option>
-                                            <option value={1}>Bebê e Criança</option>
-                                            <option value={2}>Agricultura</option>
-                                            <option value={3}>Moda</option>
-                                            <option value={4}>Carro</option>
-                                        </Select>
+                                        <FormControl  error={!!errors.category}>
+                                            <Select
+                                                name="category"
+                                                fullWidth
+                                                value={values.category}
+                                                onChange={handleChange}
+                                            >
+                                                <MenuItem value="">Selecione uma categoria</MenuItem>
+                                                <MenuItem value="Bebê e Criança">Bebê e Criança</MenuItem>
+                                                <MenuItem value="Agricultura">Agricultura</MenuItem>
+                                                <MenuItem value="Moda">Moda</MenuItem>
+                                                <MenuItem value="Carro">Carro</MenuItem>
+                                            </Select>
+                                            <FormHelperText>{errors.category}</FormHelperText>
+                                        </FormControl>
                                     </Box>
                                     <Box 
                                         display="flex" 
