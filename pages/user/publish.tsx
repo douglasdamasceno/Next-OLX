@@ -9,6 +9,8 @@ import {makeStyles} from "@mui/styles";
 
 import { DeleteForever } from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 const useStyles = makeStyles((theme:Theme) => ({
     box:{
@@ -55,6 +57,13 @@ type TFile = typeof File & {
     preview: string;
 }
 
+const validationSchema = yup.object().shape({
+    title: yup.string()
+        .min(6,"Escreva um título maior")
+        .max(100,"Escreva um título menor")
+        .required('Título é obrigatório'),
+});
+
 const Publish: React.FC = () => {
     const [files,setFiles] = useState<TFile[]>([]);
     const {getRootProps, getInputProps} = useDropzone({
@@ -87,187 +96,218 @@ const Publish: React.FC = () => {
                     Quanto mais detalhado, mais vendas!
                 </Typography>
             </Box>
-            <Container maxWidth="md">
-                <Box 
-                    display="flex" 
-                    flexDirection="column"
-                    gap={2} 
-                    bgcolor={theme.palette.background.default}
-                    padding={3}
-                    marginBottom={3}
-                >
-                    <Typography component="h5" color='textPrimary'  variant='h5' >
-                        Título do anúncio
-                    </Typography>
-                    <TextField 
-                        label="ex: Bicicleta Aro 18 com garantia"
-                        size="small"
-                        fullWidth
-                        variant="standard"
-                    />
-                    <Typography component="h6" color='textPrimary'  variant='h6' >
-                        Categoria
-                    </Typography>
-                    <Select
-                        variant='standard'
-                        native
-                        fullWidth
-                        value=""
-                        label="Age"
-                        onChange={()=>{}}
-                        inputProps={{
-                            name: 'category',
-                        }}
-                    >
-                        <option value="">Selecione</option>
-                        <option value={1}>Bebê e Criança</option>
-                        <option value={2}>Agricultura</option>
-                        <option value={3}>Moda</option>
-                        <option value={4}>Carro</option>
-                    </Select>
-                </Box>
-                <Box 
-                    display="flex" 
-                    flexDirection="column"
-                    gap={2} 
-                    bgcolor={theme.palette.background.default}
-                    padding={3}
-                    marginBottom={3}
-                >
-                    <Typography component="h6" color='textPrimary'  variant='h6'>
-                        Imagens
-                    </Typography>
-                    <Typography component="div" color='textPrimary'  variant='body2'>
-                        A primeira imagem é a foto principal do anúncio.
-                    </Typography>
-                    <Box display="flex" flexWrap="wrap">
-                        <Box 
-                            component="div"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            textAlign="center"
-                            padding={1.25}
-                            width="200px"
-                            height="150px"
-                            margin="0 10px 10px 0"
-                            style={{ backgroundColor:theme.palette.background.paper}}
-                            border="2px dashed black"
-                            {...getRootProps()}
-                        >
-                            <input {...getInputProps()} />
-                            <Typography variant='body2' component="div" color='textPrimary'>
-                                Clique para adicionar ou arraste a imagem.
-                            </Typography>
-                        </Box>
-                        {
-                            files.map((file:TFile,index)=>(
-                                <Box
-                                    key={file.name}
-                                    className={classes.thumb}
-                                    component="div"
-                                    style={{backgroundImage:`url(${file.preview})`}}
+
+            <Formik
+                initialValues={{
+                    title:'',
+                }}
+                validationSchema={validationSchema}  
+                onSubmit={(values)=>{
+                    console.log(values);
+                }}
+            >
+                {
+                    ({
+                        values,
+                        errors,
+                        handleSubmit,
+                        handleChange,
+                    })=>{
+                        console.log(errors);
+                        return(
+                            <form onSubmit={handleSubmit}>
+                                <Container maxWidth="md">
+                                    <Box 
+                                        display="flex" 
+                                        flexDirection="column"
+                                        gap={2} 
+                                        bgcolor={theme.palette.background.default}
+                                        padding={3}
+                                        marginBottom={3}
                                     >
-                                    {
-                                        index === 0 && 
-                                        (
-                                            <Box className={classes.mainImage}>
-                                                <Typography variant='body2' component="div" color='secondary'>
-                                                    Principal
+                                        <Typography component="h5" color='textPrimary'  variant='h5' >
+                                            Título do anúncio
+                                        </Typography>
+                                        <TextField 
+                                            name="title"
+                                            value={values.title}
+                                            onChange={handleChange}
+                                            label="ex: Bicicleta Aro 18 com garantia"
+                                            size="small"
+                                            fullWidth
+                                            variant="standard"
+                                            error={!!errors.title}
+                                            helperText={errors.title}
+                                        />
+                                        <Typography component="h6" color='textPrimary'  variant='h6' >
+                                            Categoria
+                                        </Typography>
+                                        <Select
+                                            variant='standard'
+                                            native
+                                            fullWidth
+                                            value=""
+                                            label="Age"
+                                            onChange={()=>{}}
+                                            inputProps={{
+                                                name: 'category',
+                                            }}
+                                        >
+                                            <option value="">Selecione</option>
+                                            <option value={1}>Bebê e Criança</option>
+                                            <option value={2}>Agricultura</option>
+                                            <option value={3}>Moda</option>
+                                            <option value={4}>Carro</option>
+                                        </Select>
+                                    </Box>
+                                    <Box 
+                                        display="flex" 
+                                        flexDirection="column"
+                                        gap={2} 
+                                        bgcolor={theme.palette.background.default}
+                                        padding={3}
+                                        marginBottom={3}
+                                    >
+                                        <Typography component="h6" color='textPrimary'  variant='h6'>
+                                            Imagens
+                                        </Typography>
+                                        <Typography component="div" color='textPrimary'  variant='body2'>
+                                            A primeira imagem é a foto principal do anúncio.
+                                        </Typography>
+                                        <Box display="flex" flexWrap="wrap">
+                                            <Box 
+                                                component="div"
+                                                display="flex"
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                textAlign="center"
+                                                padding={1.25}
+                                                width="200px"
+                                                height="150px"
+                                                margin="0 10px 10px 0"
+                                                style={{ backgroundColor:theme.palette.background.paper}}
+                                                border="2px dashed black"
+                                                {...getRootProps()}
+                                            >
+                                                <input {...getInputProps()} />
+                                                <Typography variant='body2' component="div" color='textPrimary'>
+                                                    Clique para adicionar ou arraste a imagem.
                                                 </Typography>
                                             </Box>
-                                        )
-                                    }
-                                    <Box className={classes.mask}>
-                                        <IconButton color="secondary" onClick={()=> handleRemoveFile(file.name)}>
-                                            <DeleteForever fontSize="large" />
-                                        </IconButton>
+                                            {
+                                                files.map((file:TFile,index)=>(
+                                                    <Box
+                                                        key={file.name}
+                                                        className={classes.thumb}
+                                                        component="div"
+                                                        style={{backgroundImage:`url(${file.preview})`}}
+                                                        >
+                                                        {
+                                                            index === 0 && 
+                                                            (
+                                                                <Box className={classes.mainImage}>
+                                                                    <Typography variant='body2' component="div" color='secondary'>
+                                                                        Principal
+                                                                    </Typography>
+                                                                </Box>
+                                                            )
+                                                        }
+                                                        <Box className={classes.mask}>
+                                                            <IconButton color="secondary" onClick={()=> handleRemoveFile(file.name)}>
+                                                                <DeleteForever fontSize="large" />
+                                                            </IconButton>
+                                                        </Box>
+                                                </Box>
+                                                ))
+                                            }
+                                            
+                                        </Box>
                                     </Box>
-                            </Box>
-                            ))
-                        }
-                        
-                    </Box>
-                </Box>
-                <Box 
-                    display="flex" 
-                    flexDirection="column"
-                    gap={2} 
-                    bgcolor={theme.palette.background.default}
-                    padding={3}
-                    marginBottom={3}
-                >
-                    <Typography component="h6" color='textPrimary'  variant='h6'>
-                        Descrição
-                    </Typography>
-                    <Typography component="div" color='textPrimary'  variant='body2'>
-                        Escreva os detalhes do que está vendendo.
-                    </Typography>
-                    <TextField
-                        multiline
-                        rows={6}
-                        variant="outlined"
-                        fullWidth
-                    />
-                </Box>
-                <Box display="flex" 
-                    flexDirection="column"
-                    gap={2} 
-                    bgcolor={theme.palette.background.default}
-                    padding={3}
-                    marginBottom={3}>
-                    <Typography component="h6" color='textPrimary'  variant='h6'>
-                        Preço
-                    </Typography>
-                    <br/>
-                    <FormControl  fullWidth variant='outlined'>
-                        <InputLabel>Valor</InputLabel>
-                        <OutlinedInput onChange={()=>{}} 
-                            startAdornment={<InputAdornment position='start'>R$</InputAdornment>} 
-                        />
-                    </FormControl>
-                </Box>
-                <Box 
-                    display="flex" 
-                    flexDirection="column"
-                    gap={2} 
-                    bgcolor={theme.palette.background.default}
-                    padding={3}
-                    marginBottom={3}
-                >
-                    <Typography component="h6" color='textPrimary'  variant='h6'>
-                        Descrição
-                    </Typography>
-                    <Typography component="div" color='textPrimary'  variant='body2'>
-                        Escreva os detalhes do que está vendendo.
-                    </Typography>
-                    <TextField
-                        label="Nome"
-                        size='small'
-                        variant="outlined"
-                        fullWidth
-                    />
-                    <TextField
-                        label="E-mail"
-                        size='small'
-                        variant="outlined"
-                        fullWidth
-                    />
-                    <TextField
-                        label="Telefone"
-                        size='small'
-                        variant="outlined"
-                        fullWidth
-                    />
-                </Box>
-                
-                <Box textAlign="end">
-                    <Button variant="contained" color="primary" fullWidth={isSmDown}>
-                        Publicar Anúncio
-                    </Button>
-                </Box>
+                                    <Box 
+                                        display="flex" 
+                                        flexDirection="column"
+                                        gap={2} 
+                                        bgcolor={theme.palette.background.default}
+                                        padding={3}
+                                        marginBottom={3}
+                                    >
+                                        <Typography component="h6" color='textPrimary'  variant='h6'>
+                                            Descrição
+                                        </Typography>
+                                        <Typography component="div" color='textPrimary'  variant='body2'>
+                                            Escreva os detalhes do que está vendendo.
+                                        </Typography>
+                                        <TextField
+                                            multiline
+                                            rows={6}
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </Box>
+                                    <Box display="flex" 
+                                        flexDirection="column"
+                                        gap={2} 
+                                        bgcolor={theme.palette.background.default}
+                                        padding={3}
+                                        marginBottom={3}>
+                                        <Typography component="h6" color='textPrimary'  variant='h6'>
+                                            Preço
+                                        </Typography>
+                                        <br/>
+                                        <FormControl  fullWidth variant='outlined'>
+                                            <InputLabel>Valor</InputLabel>
+                                            <OutlinedInput onChange={()=>{}} 
+                                                startAdornment={<InputAdornment position='start'>R$</InputAdornment>} 
+                                            />
+                                        </FormControl>
+                                    </Box>
+                                    <Box 
+                                        display="flex" 
+                                        flexDirection="column"
+                                        gap={2} 
+                                        bgcolor={theme.palette.background.default}
+                                        padding={3}
+                                        marginBottom={3}
+                                    >
+                                        <Typography component="h6" color='textPrimary'  variant='h6'>
+                                            Descrição
+                                        </Typography>
+                                        <Typography component="div" color='textPrimary'  variant='body2'>
+                                            Escreva os detalhes do que está vendendo.
+                                        </Typography>
+                                        <TextField
+                                            label="Nome"
+                                            size='small'
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                        <TextField
+                                            label="E-mail"
+                                            size='small'
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                        <TextField
+                                            label="Telefone"
+                                            size='small'
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </Box>
+                                    
+                                    <Box textAlign="end">
+                                        <Button variant="contained" type='submit' color="primary" fullWidth={isSmDown}>
+                                            Publicar Anúncio
+                                        </Button>
+                                    </Box> 
+                                </Container>  
+                            </form>
+                        )
+                    }
+                }
 
-            </Container>  
+            </Formik>
+            
       </TemplateDefault>
   );
 }
