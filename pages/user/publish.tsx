@@ -11,9 +11,6 @@ import { DeleteForever } from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
 
 const useStyles = makeStyles((theme:Theme) => ({
-    container: {
-        padding: theme.spacing(8, 0, 6)
-    },
     box:{
         display:'flex',
         flexDirection:'column',
@@ -82,7 +79,7 @@ const Publish: React.FC = () => {
     
   return (
       <TemplateDefault>
-            <Box maxWidth="sm" component={Container} className={classes.container}>
+            <Box maxWidth="sm" component={Container}>
                 <Typography component="h1" color='textPrimary'  variant='h2' align='center'>
                     Publicar Anúncio
                 </Typography>

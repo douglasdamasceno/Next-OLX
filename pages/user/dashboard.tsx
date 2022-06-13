@@ -4,15 +4,12 @@ import type { NextPage } from 'next'
 import TemplateDefault from "../../src/templates/Default";
 
 const useStyles = makeStyles((theme: Theme ) => ({
-  container: {
-    padding: theme.spacing(8, 0, 6, 0)
-  },
   buttonAdd: {
     margin: '30px auto',
     display: 'block'
   },
   cardMedia:{
-   paddingTop: '56.25%', // 16:9
+   paddingTop: '56.25%',
   }
 }));
  
@@ -23,7 +20,7 @@ const Home: NextPage = () => {
     <TemplateDefault>
       <Box display='flex' flexDirection='column'>
 
-      <Container maxWidth="sm" className={classes.container}>
+      <Container maxWidth="sm">
         <Typography component="h1" color='primary'  variant='h2'align='center'>Meus Anúncios</Typography>
         <Button className={classes.buttonAdd} variant="contained" color='primary' style={{margin:'30px auto',display:'block'}}>
           Publicar novo anúncio

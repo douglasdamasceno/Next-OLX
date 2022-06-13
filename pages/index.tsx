@@ -8,10 +8,7 @@ import { makeStyles } from '@mui/styles';
 import TemplaDefault from '../src/templates/Default';
 
 const useStyles = makeStyles((theme:Theme) =>({
-    searchContainer: {
-        padding: theme.spacing(8,10,6)
-    },
-
+   
     searchBox:{
         display:'flex',
         justifyContent: 'space-between',
@@ -34,7 +31,7 @@ const  Home: React.FC = () => {
 
     return (
         <TemplaDefault>
-            <Container maxWidth="md" className={classes.searchContainer}>
+            <Container maxWidth="md">
                 <Typography component="h1" variant="h3" align='center' color="textPrimary">
                     O que deseja encontrar?
                 </Typography>
@@ -45,7 +42,7 @@ const  Home: React.FC = () => {
                     </IconButton>
                 </Box>
             </Container>
-            <Container maxWidth="md" className={classes.cardGrid}>
+            <Container maxWidth="lg" className={classes.cardGrid}>
                 <Typography component="h2" variant="h4" align='center' color="textPrimary">
                     Destaques
                 </Typography>
