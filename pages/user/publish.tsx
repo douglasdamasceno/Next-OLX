@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 
 import TemplateDefault from "../../src/templates/Default";
 import {makeStyles} from "@mui/styles";
+
 import { DeleteForever } from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
 
