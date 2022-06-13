@@ -7,6 +7,7 @@ import { makeStyles } from '@mui/styles';
 
 import TemplaDefault from '../src/templates/Default';
 import Card from '../src/components/Card';
+import { NextPage } from 'next';
 
 const useStyles = makeStyles((theme:Theme) =>({
    
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme:Theme) =>({
     }
 }));
 
-const  Home: React.FC = () => {
+const Home: NextPage = () => {
     const classes = useStyles();
 
     return (

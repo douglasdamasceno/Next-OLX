@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
  
-const Home: NextPage = () => {
+const Dashboard: NextPage = () => {
   const classes = useStyles();
 
   return (
@@ -85,4 +85,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default Dashboard
