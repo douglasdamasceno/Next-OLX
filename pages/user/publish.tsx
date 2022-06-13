@@ -1,8 +1,11 @@
 import { Container, Typography,Theme,Box ,TextField,Select, 
-        useTheme, Button, useMediaQuery, IconButton,FormControl, InputLabel,OutlinedInput,
+        useTheme, Button, useMediaQuery, IconButton,FormControl, 
+        InputLabel,
+        OutlinedInput,
         InputAdornment,
         MenuItem,
         FormHelperText,
+        Input,
     } from '@mui/material';
 import React, { useState } from 'react';
 
@@ -13,7 +16,6 @@ import { DeleteForever } from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { FormControlUnstyled } from '@mui/base';
 
 const useStyles = makeStyles((theme:Theme) => ({
     box:{
@@ -66,6 +68,10 @@ const validationSchema = yup.object().shape({
         .max(100,"Escreva um título menor")
         .required('Título é obrigatório'),
     category: yup.string().required('Categoria é obrigatória'),
+    description: yup.string()
+    .min(6,"Escreva um título maior")
+    .max(100,"Escreva um título menor")
+    .required('Descrição é obrigatório'),
 });
 
 const Publish: React.FC = () => {
@@ -105,6 +111,7 @@ const Publish: React.FC = () => {
                 initialValues={{
                     title:'',
                     category:'',
+                    description:'',
                 }}
                 validationSchema={validationSchema}  
                 onSubmit={(values)=>{
@@ -133,32 +140,30 @@ const Publish: React.FC = () => {
                                         <Typography component="h5" color='textPrimary'  variant='h5' >
                                             Título do anúncio
                                         </Typography>
-                                        <TextField 
-                                            name="title"
-                                            value={values.title}
-                                            onChange={handleChange}
-                                            label="ex: Bicicleta Aro 18 com garantia"
-                                            size="small"
-                                            fullWidth
-                                            variant="standard"
-                                            error={!!errors.title}
-                                            helperText={errors.title}
-                                        />
+                                        <FormControl error={!!errors.title} fullWidth>
+                                            <InputLabel>ex.: Bicicleta Aro 18 com garantia</InputLabel>
+                                            <Input 
+                                                name="title"
+                                                value={values.title}
+                                                onChange={handleChange}
+                                            />
+                                            <FormHelperText>{errors.title}</FormHelperText>
+                                        </FormControl>
                                         <Typography component="h6" color='textPrimary'  variant='h6' >
                                             Categoria
                                         </Typography>
-                                        <FormControl  error={!!errors.category}>
+                                        <FormControl  error={!!errors.category} fullWidth>
                                             <Select
                                                 name="category"
                                                 fullWidth
+                                                variant='standard'
                                                 value={values.category}
                                                 onChange={handleChange}
                                             >
-                                                <MenuItem value="">Selecione uma categoria</MenuItem>
-                                                <MenuItem value="Bebê e Criança">Bebê e Criança</MenuItem>
                                                 <MenuItem value="Agricultura">Agricultura</MenuItem>
-                                                <MenuItem value="Moda">Moda</MenuItem>
+                                                <MenuItem value="Bebê e Criança">Bebê e Criança</MenuItem>
                                                 <MenuItem value="Carro">Carro</MenuItem>
+                                                <MenuItem value="Moda">Moda</MenuItem>
                                             </Select>
                                             <FormHelperText>{errors.category}</FormHelperText>
                                         </FormControl>
@@ -240,12 +245,16 @@ const Publish: React.FC = () => {
                                         <Typography component="div" color='textPrimary'  variant='body2'>
                                             Escreva os detalhes do que está vendendo.
                                         </Typography>
+                                        <FormControl error={!!errors.description} fullWidth>
+
                                         <TextField
+                                            name="description"
                                             multiline
                                             rows={6}
                                             variant="outlined"
-                                            fullWidth
-                                        />
+                                            />
+                                            <FormHelperText>{errors.description}</FormHelperText>
+                                        </FormControl>
                                     </Box>
                                     <Box display="flex" 
                                         flexDirection="column"
