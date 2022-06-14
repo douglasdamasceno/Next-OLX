@@ -11,16 +11,6 @@ import TemplateDefault from "../../../src/templates/Default";
 import {validationSchema,initialValues} from "./formValues";
 import FileUpload from '../../../src/components/FileUpload';
 
-interface Values{
-    title:string;
-    category:string;
-    description:string;
-    price:number;
-    name:string;
-    email:string;
-    phone:number;
-    // files:TFile[];
-}
 
 const Publish: React.FC = () => {
     const theme = useTheme();

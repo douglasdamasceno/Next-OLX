@@ -7,15 +7,11 @@ import {useStyles} from "./styles";
 type TFile = typeof File & {
     preview: string;
 }
-interface Values{
-    title:string;
-    category:string;
-    description:string;
-    price:number;
-    name:string;
-    email:string;
-    phone:number;
-    // files:TFile[];
+interface IFileUploadProps {
+    files:TFile[];
+    errors:string;
+    touched:string;
+    setFieldValue: (field:string,value:any) => void;
 }
 
 const FileUpload: React.FC = ({files,errors, touched,setFieldValue}:any) => {
@@ -42,7 +38,7 @@ const FileUpload: React.FC = ({files,errors, touched,setFieldValue}:any) => {
     return (
         <>
             <Typography component="h6" color={(errors && touched) ?'error':'textPrimary'}  variant='h6'>
-                Imagens
+                Imagens {touched}
             </Typography>
             <Typography component="div" color={(errors && touched)?'error':'textPrimary'}  variant='body2'>
                 A primeira imagem é a foto principal do anúncio.
