@@ -1,21 +1,15 @@
 import { Container, Typography,Theme,Box ,TextField,Select, 
-        useTheme, Button, useMediaQuery, IconButton,FormControl, 
+        useTheme, Button, useMediaQuery,FormControl, 
         InputLabel,InputAdornment,MenuItem,FormHelperText,Input,
     } from '@mui/material';
 
     
-import { DeleteForever } from '@mui/icons-material';
-import { useDropzone } from 'react-dropzone';
 import { Formik } from 'formik';
     
 import TemplateDefault from "../../../src/templates/Default";
 
-import {useStyles} from "./styles";
 import {validationSchema,initialValues} from "./formValues";
-
-type TFile = typeof File & {
-    preview: string;
-}
+import FileUpload from '../../../src/components/FileUpload';
 
 interface Values{
     title:string;
@@ -25,11 +19,10 @@ interface Values{
     name:string;
     email:string;
     phone:number;
-    files:TFile[];
+    // files:TFile[];
 }
 
 const Publish: React.FC = () => {
-    const classes = useStyles();
     const theme = useTheme();
     const isSmDown = useMediaQuery((theme:Theme)=>theme.breakpoints.down('sm'));
     
@@ -47,7 +40,7 @@ const Publish: React.FC = () => {
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}  
-                onSubmit={(values:Values)=>{
+                onSubmit={(values)=>{
                     console.log(values);
                 }}
             >
@@ -61,23 +54,7 @@ const Publish: React.FC = () => {
                         handleBlur,
                         setFieldValue,
                     })=>{
-                        const {getRootProps, getInputProps} = useDropzone({
-                            accept: {'image/*':[]},
-                            onDrop: (acceptedFile)=>{
-                               const newFiles = acceptedFile.map((file:File)=>{
-                                   return Object.assign(file,{
-                                       preview:URL.createObjectURL(file)
-                                   });
-                               });
-                               setFieldValue("files",[...values.files,...newFiles]);
-                            }
-                        });
-                    
-                        const handleRemoveFile = (fileName:string):void =>{
-                            const newFileState = values.files.filter((file:TFile)=>file.name!==fileName);
-                            setFieldValue("files",newFileState);
-                        }
-
+                        
                         return(
                             <form onSubmit={handleSubmit}>
                                 <Container maxWidth="md">
@@ -130,67 +107,12 @@ const Publish: React.FC = () => {
                                         padding={3}
                                         marginBottom={3}
                                     >
-                                        <Typography component="h6" color={(errors.files && touched.files) ?'error':'textPrimary'}  variant='h6'>
-                                            Imagens
-                                        </Typography>
-                                        <Typography component="div" color={(errors.files && touched.files)?'error':'textPrimary'}  variant='body2'>
-                                            A primeira imagem é a foto principal do anúncio.
-                                        </Typography>
-                                        {
-                                            (errors.files && touched.files) && (
-                                                <Typography gutterBottom color='error'  variant='body2'>
-                                                    {errors.files}
-                                                </Typography>
-                                            )  
-                                        }
-                                        <Box display="flex" flexWrap="wrap">
-                                            <Box 
-                                                component="div"
-                                                display="flex"
-                                                alignItems="center"
-                                                justifyContent="center"
-                                                textAlign="center"
-                                                padding={1.25}
-                                                width="200px"
-                                                height="150px"
-                                                margin="0 10px 10px 0"
-                                                style={{ backgroundColor:theme.palette.background.paper}}
-                                                border="2px dashed black"
-                                                {...getRootProps()}
-                                            >
-                                                <input name="files" {...getInputProps()} />
-                                                <Typography variant='body2' component="div" color={(errors.files && touched.files)?'error':'textPrimary'}>
-                                                    Clique para adicionar ou arraste a imagem.
-                                                </Typography>
-                                            </Box>
-                                            {
-                                                values.files.map((file:TFile,index)=>(
-                                                    <Box
-                                                        key={index}
-                                                        className={classes.thumb}
-                                                        component="div"
-                                                        style={{backgroundImage:`url(${file.preview})`}}
-                                                        >
-                                                        {
-                                                            index === 0 && 
-                                                            (
-                                                                <Box className={classes.mainImage}>
-                                                                    <Typography variant='body2' component="div" color='secondary'>
-                                                                        Principal
-                                                                    </Typography>
-                                                                </Box>
-                                                            )
-                                                        }
-                                                        <Box className={classes.mask}>
-                                                            <IconButton color="secondary" onClick={()=> handleRemoveFile(file.name)}>
-                                                                <DeleteForever fontSize="large" />
-                                                            </IconButton>
-                                                        </Box>
-                                                </Box>
-                                                ))
-                                            }
-                                            
-                                        </Box>
+                                       <FileUpload
+                                            files={values.files}
+                                            errors={errors.files}
+                                            touched={touched.files}
+                                            setFieldValue={setFieldValue}
+                                       />
                                     </Box>
                                     <Box 
                                         display="flex" 
