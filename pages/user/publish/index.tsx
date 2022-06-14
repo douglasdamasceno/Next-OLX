@@ -1,82 +1,21 @@
 import { Container, Typography,Theme,Box ,TextField,Select, 
         useTheme, Button, useMediaQuery, IconButton,FormControl, 
-        InputLabel,
-        InputAdornment,
-        MenuItem,
-        FormHelperText,
-        Input,
+        InputLabel,InputAdornment,MenuItem,FormHelperText,Input,
     } from '@mui/material';
-import React, { useState } from 'react';
 
-import TemplateDefault from "../../src/templates/Default";
-import {makeStyles} from "@mui/styles";
-
+    
 import { DeleteForever } from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
 import { Formik } from 'formik';
-import * as yup from 'yup';
+    
+import TemplateDefault from "../../../src/templates/Default";
 
-const useStyles = makeStyles((theme:Theme) => ({
-    box:{
-        display:'flex',
-        flexDirection:'column',
-        gap:theme.spacing(2),
-        backgroundColor:theme.palette.background.default,
-        padding:theme.spacing(3),
-    },
-    mask:{ },
-    mainImage:{ },
-    thumb:{
-        position:'relative',
-        width:200,
-        height:150,
-        backgroundSize:'cover',
-        margin:'0 10px 10px 0',
-        backgroundPosition:'center center',
-
-        '& $mainImage':{
-            backgroundColor:'blue',
-            paddding:'10px 10px',
-            position:'absolute',
-            botttom:0,
-            left:0,
-        },
-
-        '&:hover $mask':{
-            display:'flex',
-        },
-        '& $mask':{
-            backgroundColor:'rgba(0,0,0,0.7)',
-            height:'100%',
-            width:'100%',
-            display:'none',
-            justifyContent:'center',
-            alignItems:'center',
-            textAlign:'center',
-        }
-    },
-}));
+import {useStyles} from "./styles";
+import {validationSchema,initialValues} from "./formValues";
 
 type TFile = typeof File & {
     preview: string;
 }
-
-const validationSchema = yup.object().shape({
-    title: yup.string()
-        .min(6,"Escreva um título maior")
-        .max(100,"Escreva um título menor")
-        .required('Título é obrigatório'),
-    category: yup.string().required('Categoria é obrigatória'),
-    description: yup.string()
-    .min(6,"Escreva um título maior")
-    .max(100,"Escreva um título menor")
-    .required('Descrição é obrigatório'),
-    price: yup.number().required('Preço é obrigatória'),
-    name: yup.string().required('Nome é obrigatório'),
-    email: yup.string().email("Digite um email válido").required('Email é obrigatório'),
-    phone: yup.number().required('Telefone é obrigatório'),
-    files: yup.array().min(1,'Envie pelo menos uma foto').required('Fotos é obrigatória'),
-});
 
 interface Values{
     title:string;
@@ -106,16 +45,7 @@ const Publish: React.FC = () => {
             </Box>
 
             <Formik
-                initialValues={{
-                    title:'',
-                    category:'',
-                    description:'',
-                    price:0,
-                    name:'',
-                    email:'',
-                    phone:0,
-                    files:[],
-                }}
+                initialValues={initialValues}
                 validationSchema={validationSchema}  
                 onSubmit={(values:Values)=>{
                     console.log(values);
