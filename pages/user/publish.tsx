@@ -1,7 +1,6 @@
 import { Container, Typography,Theme,Box ,TextField,Select, 
         useTheme, Button, useMediaQuery, IconButton,FormControl, 
         InputLabel,
-        OutlinedInput,
         InputAdornment,
         MenuItem,
         FormHelperText,
@@ -73,26 +72,24 @@ const validationSchema = yup.object().shape({
     .max(100,"Escreva um título menor")
     .required('Descrição é obrigatório'),
     price: yup.number().required('Preço é obrigatória'),
+    name: yup.string().required('Nome é obrigatório'),
+    email: yup.string().email("Digite um email válido").required('Email é obrigatório'),
+    phone: yup.number().required('Telefone é obrigatório'),
+    files: yup.array().min(1,'Envie pelo menos uma foto').required('Fotos é obrigatória'),
 });
 
-const Publish: React.FC = () => {
-    const [files,setFiles] = useState<TFile[]>([]);
-    const {getRootProps, getInputProps} = useDropzone({
-        accept: {'image/*':[]},
-        onDrop: (acceptedFile)=>{
-           const newFiles = acceptedFile.map((file:File)=>{
-               return Object.assign(file,{
-                   preview:URL.createObjectURL(file)
-               });
-           });
-           setFiles([...files,...newFiles]);
-        }
-    });
+interface Values{
+    title:string;
+    category:string;
+    description:string;
+    price:number;
+    name:string;
+    email:string;
+    phone:number;
+    files:TFile[];
+}
 
-    const handleRemoveFile = (fileName:string):void =>{
-        const newFileState = files.filter(file=>file.name!==fileName);
-        setFiles(newFileState);
-    }
+const Publish: React.FC = () => {
     const classes = useStyles();
     const theme = useTheme();
     const isSmDown = useMediaQuery((theme:Theme)=>theme.breakpoints.down('sm'));
@@ -113,10 +110,14 @@ const Publish: React.FC = () => {
                     title:'',
                     category:'',
                     description:'',
-                    price:'',
+                    price:0,
+                    name:'',
+                    email:'',
+                    phone:0,
+                    files:[],
                 }}
                 validationSchema={validationSchema}  
-                onSubmit={(values)=>{
+                onSubmit={(values:Values)=>{
                     console.log(values);
                 }}
             >
@@ -124,10 +125,29 @@ const Publish: React.FC = () => {
                     ({
                         values,
                         errors,
+                        touched,
                         handleSubmit,
                         handleChange,
+                        handleBlur,
+                        setFieldValue,
                     })=>{
-                        
+                        const {getRootProps, getInputProps} = useDropzone({
+                            accept: {'image/*':[]},
+                            onDrop: (acceptedFile)=>{
+                               const newFiles = acceptedFile.map((file:File)=>{
+                                   return Object.assign(file,{
+                                       preview:URL.createObjectURL(file)
+                                   });
+                               });
+                               setFieldValue("files",[...values.files,...newFiles]);
+                            }
+                        });
+                    
+                        const handleRemoveFile = (fileName:string):void =>{
+                            const newFileState = values.files.filter((file:TFile)=>file.name!==fileName);
+                            setFieldValue("files",newFileState);
+                        }
+
                         return(
                             <form onSubmit={handleSubmit}>
                                 <Container maxWidth="md">
@@ -142,19 +162,20 @@ const Publish: React.FC = () => {
                                         <Typography component="h5" color='textPrimary'  variant='h5' >
                                             Título do anúncio
                                         </Typography>
-                                        <FormControl error={!!errors.title} fullWidth>
+                                        <FormControl error={!!errors.title && touched.name} fullWidth>
                                             <InputLabel>ex.: Bicicleta Aro 18 com garantia</InputLabel>
                                             <Input 
                                                 name="title"
                                                 value={values.title}
                                                 onChange={handleChange}
+                                                onBlur={handleBlur}
                                             />
                                             <FormHelperText>{errors.title}</FormHelperText>
                                         </FormControl>
                                         <Typography component="h6" color='textPrimary'  variant='h6' >
                                             Categoria
                                         </Typography>
-                                        <FormControl  error={!!errors.category} fullWidth>
+                                        <FormControl  error={!!errors.category && touched.category} fullWidth>
                                             <Select
                                                 name="category"
                                                 fullWidth
@@ -162,6 +183,7 @@ const Publish: React.FC = () => {
                                                 value={values.category}
                                                 onChange={handleChange}
                                             >
+                                                <MenuItem disabled value="">Selecione uma dessas Categorias</MenuItem>
                                                 <MenuItem value="Agricultura">Agricultura</MenuItem>
                                                 <MenuItem value="Bebê e Criança">Bebê e Criança</MenuItem>
                                                 <MenuItem value="Carro">Carro</MenuItem>
@@ -178,12 +200,19 @@ const Publish: React.FC = () => {
                                         padding={3}
                                         marginBottom={3}
                                     >
-                                        <Typography component="h6" color='textPrimary'  variant='h6'>
+                                        <Typography component="h6" color={(errors.files && touched.files) ?'error':'textPrimary'}  variant='h6'>
                                             Imagens
                                         </Typography>
-                                        <Typography component="div" color='textPrimary'  variant='body2'>
+                                        <Typography component="div" color={(errors.files && touched.files)?'error':'textPrimary'}  variant='body2'>
                                             A primeira imagem é a foto principal do anúncio.
                                         </Typography>
+                                        {
+                                            (errors.files && touched.files) && (
+                                                <Typography gutterBottom color='error'  variant='body2'>
+                                                    {errors.files}
+                                                </Typography>
+                                            )  
+                                        }
                                         <Box display="flex" flexWrap="wrap">
                                             <Box 
                                                 component="div"
@@ -199,15 +228,15 @@ const Publish: React.FC = () => {
                                                 border="2px dashed black"
                                                 {...getRootProps()}
                                             >
-                                                <input {...getInputProps()} />
-                                                <Typography variant='body2' component="div" color='textPrimary'>
+                                                <input name="files" {...getInputProps()} />
+                                                <Typography variant='body2' component="div" color={(errors.files && touched.files)?'error':'textPrimary'}>
                                                     Clique para adicionar ou arraste a imagem.
                                                 </Typography>
                                             </Box>
                                             {
-                                                files.map((file:TFile,index)=>(
+                                                values.files.map((file:TFile,index)=>(
                                                     <Box
-                                                        key={file.name}
+                                                        key={index}
                                                         className={classes.thumb}
                                                         component="div"
                                                         style={{backgroundImage:`url(${file.preview})`}}
@@ -244,17 +273,16 @@ const Publish: React.FC = () => {
                                         <Typography component="h6" color='textPrimary'  variant='h6'>
                                             Descrição
                                         </Typography>
-                                        <Typography component="div" color='textPrimary'  variant='body2'>
-                                            Escreva os detalhes do que está vendendo.
-                                        </Typography>
-                                        <FormControl error={!!errors.description} fullWidth>
-
-                                        <TextField
-                                            name="description"
-                                            multiline
-                                            rows={6}
-                                            variant="outlined"
-                                            />
+                                            <InputLabel>Escreva os detalhes do que está vendendo.</InputLabel>
+                                        <FormControl error={!!errors.description && touched.description} fullWidth>
+                                            <TextField
+                                                name="description"
+                                                value={values.description}
+                                                onChange={handleChange}
+                                                multiline
+                                                rows={6}
+                                                variant="outlined"
+                                                />
                                             <FormHelperText>{errors.description}</FormHelperText>
                                         </FormControl>
                                     </Box>
@@ -267,10 +295,12 @@ const Publish: React.FC = () => {
                                         <Typography component="h6" color='textPrimary'  variant='h6'>
                                             Preço
                                         </Typography>
-                                        <br/>
-                                        <FormControl error={!!errors.price}  fullWidth variant='outlined'>
-                                            <InputLabel>Valor</InputLabel>
-                                            <OutlinedInput onChange={()=>{}} 
+                                        <FormControl error={!!errors.price && touched.price}  fullWidth variant='outlined'>
+                                            <Input 
+                                                type='number'
+                                                name="price"
+                                                value={values.price}
+                                                onChange={handleChange}
                                                 startAdornment={<InputAdornment position='start'>R$</InputAdornment>} 
                                             />
                                             <FormHelperText>{errors.price}</FormHelperText>
@@ -285,29 +315,37 @@ const Publish: React.FC = () => {
                                         marginBottom={3}
                                     >
                                         <Typography component="h6" color='textPrimary'  variant='h6'>
-                                            Descrição
+                                            Dados de Contato
                                         </Typography>
-                                        <Typography component="div" color='textPrimary'  variant='body2'>
-                                            Escreva os detalhes do que está vendendo.
-                                        </Typography>
-                                        <TextField
-                                            label="Nome"
-                                            size='small'
-                                            variant="outlined"
-                                            fullWidth
-                                        />
-                                        <TextField
-                                            label="E-mail"
-                                            size='small'
-                                            variant="outlined"
-                                            fullWidth
-                                        />
-                                        <TextField
-                                            label="Telefone"
-                                            size='small'
-                                            variant="outlined"
-                                            fullWidth
-                                        />
+                                        <FormControl error={!!errors.name && touched.name} fullWidth>
+                                            <InputLabel>Nome</InputLabel>
+                                                <Input 
+                                                    name="name"
+                                                    value={values.name}
+                                                    onChange={handleChange}
+                                                />
+                                            <FormHelperText>{errors.name}</FormHelperText>
+                                        </FormControl>
+                                        <FormControl error={!!errors.email && touched.email} fullWidth>
+                                            <InputLabel>Email</InputLabel>
+                                            <Input
+                                                name="email"
+                                                type='email'
+                                                value={values.email}
+                                                onChange={handleChange}
+                                            />
+                                            <FormHelperText>{errors.email}</FormHelperText>
+                                        </FormControl>
+                                        <FormControl error={!!errors.phone && touched.phone} fullWidth>
+                                            <InputLabel>Telefone</InputLabel>
+                                            <Input
+                                                type='tel'
+                                                name="phone"
+                                                value={values.phone}
+                                                onChange={handleChange}
+                                            />
+                                            <FormHelperText>{errors.phone}</FormHelperText>
+                                        </FormControl>
                                     </Box>
                                     
                                     <Box textAlign="end">
