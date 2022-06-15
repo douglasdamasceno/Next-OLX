@@ -6,6 +6,11 @@ const crypto = async(password:string) =>{
     return passwordHash;
 }
 
+const compare = async(password:string, passwordHash:string) =>{
+    const result = await bcrypt.compare(password, passwordHash);
+    return result;
+}
 export {
-    crypto
+    crypto,
+    compare,
 }
