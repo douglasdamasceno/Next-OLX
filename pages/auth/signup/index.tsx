@@ -1,14 +1,21 @@
-import { Box, Button, Container,useTheme, FormControl, FormHelperText, Input, InputLabel, Typography } from '@mui/material';
+import { 
+    Box, Button, 
+    Container,useTheme, 
+    FormControl, FormHelperText, 
+    Input, InputLabel, Typography,CircularProgress } from '@mui/material';
 import React from 'react';
 
 import { Formik } from 'formik';
+import axios from 'axios';
     
-import TemplateDefault from "../../../src/templates/Default";
-
-
 import { Theme } from "@mui/material";
 import {makeStyles} from "@mui/styles";
 import {initialValues,validationSchema} from "./formValues";
+import { useRouter } from 'next/router';
+
+import TemplateDefault from "../../../src/templates/Default";
+
+import useToasty  from "../../../src/contexts/Toasty";
 
 export const useStyles = makeStyles((theme:Theme) => ({
     box:{
@@ -22,7 +29,18 @@ export const useStyles = makeStyles((theme:Theme) => ({
 
 const Signup: React.FC = () => {
     const classes = useStyles();
+    const {setToasty} = useToasty();
+    const router = useRouter();
     const theme = useTheme();
+
+    const handleFormSubmit = async (user:any) => {
+        const response = await axios.post('/api/users',user);
+        if(response.data.success === 200){
+            setToasty({message:"Usuário criado com sucesso!",severity:"success",open:true});
+            router.push('/');
+        }
+    }
+
   return (
       <TemplateDefault>
       <Container maxWidth="sm">
@@ -34,12 +52,10 @@ const Signup: React.FC = () => {
         </Typography>
       </Container>
       <Container maxWidth="md">
-            <Formik
+            <Formik 
                 initialValues={initialValues}
                 validationSchema={validationSchema}  
-                onSubmit={(values)=>{
-                    console.log(values);
-                }}
+                onSubmit={handleFormSubmit}
             >
                 {
                     ({
@@ -49,6 +65,7 @@ const Signup: React.FC = () => {
                         handleSubmit,
                         handleChange,
                         handleBlur,
+                        isSubmitting,
                     })=>{
                         
                         return( 
@@ -90,6 +107,7 @@ const Signup: React.FC = () => {
                                             value={values.password}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
+                                            type="password"
                                         />
                                         <FormHelperText>{errors.password}</FormHelperText>
                                     </FormControl>
@@ -100,11 +118,20 @@ const Signup: React.FC = () => {
                                             value={values.passwordConfirmation}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
+                                            type="password"
                                         />
                                         <FormHelperText>{errors.passwordConfirmation}</FormHelperText>
                                     </FormControl>
-                                    <Button type="submit" variant='contained' color='primary' fullWidth>Cadastrar</Button>
-
+                                    
+                                    <Button 
+                                        type="submit"
+                                        variant='contained'  
+                                        color='primary' 
+                                        fullWidth
+                                        disabled={isSubmitting}
+                                    >
+                                        {isSubmitting ? <CircularProgress size={18}/>:'Cadastrar'}
+                                    </Button>
                                 </Box>
                             </form>
                    )

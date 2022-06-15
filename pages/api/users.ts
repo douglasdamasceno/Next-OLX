@@ -16,8 +16,8 @@ const users = async(request: NextApiRequest, response: NextApiResponse) => {
             await dbConnect();
             const passwordHash = await crypto(password);
             const user = new Users({name, email, password :passwordHash});
-            await user.save().then(() => {
-                response.status(200).json({success:200});
+            user.save().then(() => {
+                response.status(201).json({success:200});
             }).catch((err:Error) => {
                 response.status(500).json({error:err});
             });
