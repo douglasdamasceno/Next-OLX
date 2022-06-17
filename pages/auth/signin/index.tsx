@@ -2,11 +2,10 @@ import {
   Box, Button, 
   Container,useTheme, 
   FormControl, FormHelperText, 
-  Input, InputLabel, Typography,CircularProgress } from '@mui/material';
+  Input, InputLabel, Typography,CircularProgress, Alert } from '@mui/material';
 import React from 'react';
 
 import { Formik } from 'formik';
-import axios from 'axios';
   
 import {initialValues,validationSchema} from "./formValues";
 import { useRouter } from 'next/router';
@@ -14,14 +13,22 @@ import { useRouter } from 'next/router';
 import TemplateDefault from "../../../src/templates/Default";
 
 import useToasty  from "../../../src/contexts/Toasty";
+import { useSession, signIn } from "next-auth/client";
 
-const Signup: React.FC = () => {
+const Signin: React.FC = () => {
   const {setToasty} = useToasty();
   const router = useRouter();
-  const theme = useTheme();
+  const [session] = useSession();
 
+  const theme = useTheme();
+  console.log(session);  
   const handleFormSubmit = async (user:any) => {
-     
+    signIn('credentials', {
+        email: user.email,
+        password: user.password,
+        callbackUrl:'http://localhost:3000/user/dashboard'
+    });
+
   }
 
 return (
@@ -62,6 +69,9 @@ return (
                                 marginBottom={3}
                                 marginTop={3}
                             >
+                                {
+                                    router.query.i==='1' && ( <Alert severity="error">Email ou senha inválidos</Alert>)
+                                }
                                 <FormControl error={!!errors.email && touched.email} fullWidth>
                                     <InputLabel>Email</InputLabel>
                                     <Input 
@@ -104,4 +114,4 @@ return (
 );
 }
 
-export default Signup;
+export default Signin;

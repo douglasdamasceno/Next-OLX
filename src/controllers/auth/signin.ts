@@ -12,7 +12,7 @@ const post = async(request: NextApiRequest, response: NextApiResponse)=>{
     if(!user){
         response.status(401).json({sucess:false, message:"invalid"});
     }
-    const passwordIsCorret = await compare(password, user.password);
+    const passwordIsCorret = compare(password, user.password);
     if(passwordIsCorret){
         return response.status(200).json({_id:user._id, name:user.name, email:user.email});
     }

@@ -7,17 +7,13 @@ export default NextAuth({
     Providers.Credentials({
         name: 'Credentials',
         async authorize(credentials:any) {
-           const res = await axios.post("/api/auth/credentials", {
-                method:'POST',
-                body:JSON.stringify(credentials),
-                headers: {'Content-Type': 'application/json'}
-            })
+            const res = await axios.post("http://localhost:3000/api/auth/signin", credentials)
             const user = res.data;
             if (user) {
                 return user;
+            }else{
+              throw '/auth/signin?i=1';
             }
-            return null;
-            
         }
     }) ,
   ],
